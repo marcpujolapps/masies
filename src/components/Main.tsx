@@ -288,9 +288,12 @@ const Main = () => {
       <div className="flex flex-row">
         {/* Map Section */}
         <div className="h-[calc(100vh)] flex-1">
-          <div className="w-full h-full rounded-xl overflow-hidden shadow-lg" style={{
-            zIndex: 1
-          }}>
+          <div
+            className="w-full h-full rounded-xl overflow-hidden shadow-lg"
+            style={{
+              zIndex: 1,
+            }}
+          >
             <MapContainer
               center={[41.99698374446344, 1.5264785003724906]}
               zoom={13}
@@ -298,8 +301,8 @@ const Main = () => {
               style={{ background: "#f8fafc", zIndex: 1 }}
             >
               <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`}
+                attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
               />
               {filteredHouses.map((house: any) => (
                 <Marker
