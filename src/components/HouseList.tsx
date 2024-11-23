@@ -50,7 +50,7 @@ const HouseList = ({
         {filteredHouses.map((house: any) => (
           <Card
             key={house.reference_number}
-            className="hover:shadow-lg transition-shadow cursor-pointer flex"
+            className="hover:shadow-lg transition-shadow cursor-pointer flex overflow-hidden"
             onClick={() => setSelectedHouse(house)}
           >
             <div className="relative w-96 h-64 overflow-hidden border border-gray-300">
