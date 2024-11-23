@@ -115,7 +115,7 @@ const PropertyIcon = ({
 };
 
 const Main = () => {
-  const [selectedHouse, setSelectedHouse] = useState(null);
+  const [selectedHouse, setSelectedHouse] = useState<any>(null);
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [useFilters, setUseFilters] = useState<string[]>([]);
 
