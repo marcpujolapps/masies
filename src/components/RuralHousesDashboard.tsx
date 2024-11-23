@@ -19,8 +19,8 @@ import {
 import { MapPin, Home, Clock } from "lucide-react";
 
 // Preprocessing function to transform data for charts
-const prepareConservationStatusData = (houses) => {
-  const statusCounts = houses.reduce((acc, house) => {
+const prepareConservationStatusData = (houses: any) => {
+  const statusCounts = houses.reduce((acc: any, house: any) => {
     acc[house.conservation_status] = (acc[house.conservation_status] || 0) + 1;
     return acc;
   }, {});
@@ -37,7 +37,7 @@ const prepareConservationStatusData = (houses) => {
   }));
 };
 
-const RuralHousesDashboard = ({ houses }) => {
+const RuralHousesDashboard = ({ houses }: any) => {
   const [selectedFilter, setSelectedFilter] = useState("conservation_status");
 
   const chartData = useMemo(
@@ -86,7 +86,7 @@ const RuralHousesDashboard = ({ houses }) => {
             <div className="bg-gray-100 p-4 rounded-lg text-center">
               <h3 className="text-xl font-bold text-green-600">
                 {
-                  houses.filter((h) => h.conservation_status === "Molt bo")
+                  houses.filter((h: any) => h.conservation_status === "Molt bo")
                     .length
                 }
               </h3>
