@@ -97,7 +97,7 @@ const RuralHousesPage = () => {
   // Calculate available filter options and counts
   const filterOptions = useMemo(() => {
     const getOptionsWithCount = (key: string) => {
-      const counts = houses.reduce((acc, house) => {
+      const counts = houses.reduce((acc, house: any) => {
         const value = house[key];
         acc[value] = (acc[value] || 0) + 1;
         return acc;
@@ -116,7 +116,7 @@ const RuralHousesPage = () => {
 
   // Filter houses based on selected filters
   const filteredHouses = useMemo(() => {
-    return houses.filter((house) => {
+    return houses.filter((house: any) => {
       const statusMatch =
         statusFilters.length === 0 ||
         statusFilters.includes(house.conservation_status);
@@ -194,9 +194,9 @@ const RuralHousesPage = () => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {filteredHouses.map((house) => (
+              {filteredHouses.map((house: any) => (
                 <Marker
-                  key={house.id}
+                  key={house.reference_number}
                   position={[house.coordinates.lat, house.coordinates.lng]}
                   icon={createCustomIcon(house.conservation_status)}
                   eventHandlers={{

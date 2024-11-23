@@ -201,11 +201,13 @@ const HouseList = ({
                     Opcions de Renovació
                   </h3>
                   <ul className="list-disc list-inside space-y-1">
-                    {selectedHouse.renovation_options?.map((option, index) => (
-                      <li key={index} className="text-sm text-gray-600">
-                        {option}
-                      </li>
-                    ))}
+                    {selectedHouse.renovation_options?.map(
+                      (option: any, index: number) => (
+                        <li key={index} className="text-sm text-gray-600">
+                          {option}
+                        </li>
+                      )
+                    )}
                   </ul>
                 </div>
               </div>
