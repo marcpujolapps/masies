@@ -1,12 +1,22 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import { X } from "lucide-react";
+import {
+  Car,
+  ClipboardList,
+  Hammer,
+  Home,
+  House,
+  KeyRound,
+  User,
+  X,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import HouseList from "@/components/HouseList";
 import houses from "@/data/masies.json";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { Dialog, DialogContent, DialogTitle, DialogHeader } from "./ui/dialog";
 
 // Filter badge component
 const FilterBadge = ({
@@ -89,6 +99,21 @@ const createCustomIcon = (conservationStatus: string) => {
   });
 };
 
+const PropertyIcon = ({
+  status,
+}: {
+  status: "Molt bo" | "Bo" | "Regular" | "Dolent";
+}) => {
+  const colors = {
+    "Molt bo": "text-green-600",
+    Bo: "text-blue-600",
+    Regular: "text-yellow-600",
+    Dolent: "text-red-600",
+  };
+
+  return <House className={`${colors[status] || "text-gray-600"}`} />;
+};
+
 const Main = () => {
   const [selectedHouse, setSelectedHouse] = useState(null);
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
@@ -143,52 +168,134 @@ const Main = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Filters Section */}
-      <div className="p-4 bg-white shadow-sm mb-4">
-        <div className="max-w-7xl mx-auto space-y-4">
-          <FilterSection
-            title="Estat de Conservació"
-            options={filterOptions.status}
-            selectedFilters={statusFilters}
-            onFilterChange={(value) =>
-              toggleFilter(value, statusFilters, setStatusFilters)
-            }
-          />
-          <FilterSection
-            title="Ús Actual"
-            options={filterOptions.use}
-            selectedFilters={useFilters}
-            onFilterChange={(value) =>
-              toggleFilter(value, useFilters, setUseFilters)
-            }
-          />
-
-          {(statusFilters.length > 0 || useFilters.length > 0) && (
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-sm text-gray-600">
-                Mostrant {filteredHouses.length} de {houses.length} cases
-              </span>
-              <Badge
-                variant="outline"
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={clearFilters}
-              >
-                Netejar filtres
-              </Badge>
+      {selectedHouse && (
+        <Dialog
+          open={!!selectedHouse}
+          onOpenChange={() => setSelectedHouse(null)}
+        >
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2 text-2xl">
+                <PropertyIcon status={selectedHouse.conservation_status} />
+                <span>{selectedHouse.name}</span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="rounded-lg overflow-hidden">
+                  <img
+                    src={`pdf_images/pdf_${selectedHouse.pdf_page}.jpg`}
+                    alt={selectedHouse.name}
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <User className="h-5 w-5" />
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">
+                        Propietari
+                      </p>
+                      <p className="text-sm">{selectedHouse.owner_name}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <KeyRound className="h-5 w-5" />
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">
+                        Ref. Cadastral
+                      </p>
+                      <p className="text-sm">
+                        {selectedHouse.cadastral_reference}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <Home className="h-5 w-5" />
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">
+                        Ús Actual
+                      </p>
+                      <p className="text-sm">{selectedHouse.current_use}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <Car className="h-5 w-5" />
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">
+                        Accessibilitat
+                      </p>
+                      <p className="text-sm">{selectedHouse.accessibility}</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold flex items-center gap-2 mb-3">
+                    <ClipboardList className="h-5 w-5" />
+                    Descripció
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-1">
+                        Estructura
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {selectedHouse.description.structure}
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-1">
+                        Materials
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {selectedHouse.description.materials}
+                      </p>
+                    </div>
+                    {selectedHouse.description?.historical_notes && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500 mb-1">
+                          Notes Històriques
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {selectedHouse.description.historical_notes}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold flex items-center gap-2 mb-3">
+                    <Hammer className="h-5 w-5" />
+                    Opcions de Renovació
+                  </h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedHouse.renovation_options?.map(
+                      (option: any, index: number) => (
+                        <li key={index} className="text-sm text-gray-600">
+                          {option}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          </DialogContent>
+        </Dialog>
+      )}
+      <div className="flex flex-row">
         {/* Map Section */}
-        <div className="h-[calc(100vh-200px)] sticky top-4">
-          <div className="w-full h-full rounded-xl overflow-hidden shadow-lg">
+        <div className="h-[calc(100vh)] flex-1">
+          <div className="w-full h-full rounded-xl overflow-hidden shadow-lg" style={{
+            zIndex: 1
+          }}>
             <MapContainer
               center={[41.99698374446344, 1.5264785003724906]}
               zoom={13}
               className="w-full h-full"
-              style={{ background: "#f8fafc" }}
+              style={{ background: "#f8fafc", zIndex: 1 }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -209,7 +316,42 @@ const Main = () => {
         </div>
 
         {/* List Section */}
-        <div className="h-[calc(100vh-200px)] overflow-auto">
+        <div className="h-[calc(100vh)] flex-1 overflow-auto">
+          <div className="p-4 bg-white shadow-sm mb-4">
+            <div className="max-w-7xl mx-auto space-y-4">
+              <FilterSection
+                title="Estat de Conservació"
+                options={filterOptions.status}
+                selectedFilters={statusFilters}
+                onFilterChange={(value) =>
+                  toggleFilter(value, statusFilters, setStatusFilters)
+                }
+              />
+              <FilterSection
+                title="Ús Actual"
+                options={filterOptions.use}
+                selectedFilters={useFilters}
+                onFilterChange={(value) =>
+                  toggleFilter(value, useFilters, setUseFilters)
+                }
+              />
+
+              {(statusFilters.length > 0 || useFilters.length > 0) && (
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-sm text-gray-600">
+                    Mostrant {filteredHouses.length} de {houses.length} cases
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className="cursor-pointer hover:bg-gray-100"
+                    onClick={clearFilters}
+                  >
+                    Netejar filtres
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </div>
           <HouseList
             filteredHouses={filteredHouses}
             selectedHouse={selectedHouse}
