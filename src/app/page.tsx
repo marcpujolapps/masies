@@ -1,5 +1,6 @@
 "use client";
 
+import Main from "@/components/Main";
 import dynamic from "next/dynamic";
 
 const DynamicMain = dynamic(() => import("@/components/Main"), {
@@ -7,6 +8,6 @@ const DynamicMain = dynamic(() => import("@/components/Main"), {
 });
 
 export default function DynamicWrapper() {
-  return <DynamicMain />;
-  // return <Main />;
+  // return <DynamicMain />;
+  return <Main />;
 }
