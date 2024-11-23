@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState, useMemo } from "react";
-import { MapPin, House, X } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import HouseList from "@/components/HouseList";
 import houses from "@/data/masies.json";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
